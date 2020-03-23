@@ -1,0 +1,88 @@
+<!-- 头部 start -->
+    <script src="js/jquery-3.3.1.js"></script>
+    <script src="js/getParameter.js"></script>
+    <script type="text/javascript">
+        // 页面加载，自动请求访问/getNameServlet 获取当前登录的用户姓名
+        $(function () {
+            // 获取登录用户名
+            $.get("/travel_web/user/getUsername", {}, function (data) {
+                // data  User {uid:xxx, name: xxx};
+                if(data){
+                    // 用户登录过
+                    var value = "欢迎回来,"+ data.name;
+                    $("#btn_user").html(value);
+                }
+            });
+            
+            // 分类数据展示
+          $.get("/travel_web/category/show", {}, function (data) {
+              // 期望得到的数据类型： json {"cid":xxx, cname:xxxx}
+              if(data){
+                  // 获取父类元素
+                  var ul = $(".nav");
+                  // 遍历添加
+                  var template = '<li class="nav-active"><a href="index.html">首页</a></li>';
+                  $.each(data, function () {
+                      var li = '<li><a href="route_list.html?cid=' + this.cid + '">' + this.cname + '</a></li>';
+                      template += li;
+                  });
+                  template += '<li ><a href="favoriterank.html">收藏排行榜</a></li>';
+                  ul.html(template);
+              }
+          });
+
+          // 搜索按钮绑定点击事件：获取搜索框内容
+            $(".search-button").click(function () {
+                var rname = $(".search_input").val();
+                var cid = getParameter('cid');
+                // 跳转页面到route_list.html， 传递参数： cname cid
+                location.href = '/travel_web/route_list.html?cid='+cid+'&rname='+rname+'';
+            });
+        });
+    </script>
+    <header id="header">
+        <div class="top_banner">
+            <img src="images/top_banner.jpg" alt="">
+        </div>
+        <div class="shortcut">
+            <!-- 未登录状态  -->
+            <div class="login_out">
+                <a href="login.html">登录</a>
+                <a href="register.html">注册</a>
+            </div>
+            <!-- 登录状态  -->
+            <div class="login">
+            	
+                <span id="btn_user"></span>
+                <a href="myfavorite.html" class="collection">我的收藏</a>
+                <a href="javascript:location.href='/travel_web/user/logout'">退出</a>
+            </div>
+        </div>
+        <div class="header_wrap">
+            <div class="topbar">
+                <div class="logo">
+                    <a href="/"><img src="images/logo.jpg" alt=""></a>
+                </div>
+                <div class="search">
+                    <input name="" type="text" placeholder="请输入路线名称" class="search_input" autocomplete="off">
+                    <a href="javascript:;" class="search-button">搜索</a>
+                </div>
+                <div class="hottel">
+                    <div class="hot_pic">
+                        <img src="images/hot_tel.jpg" alt="">
+                    </div>
+                    <div class="hot_tel">
+                        <p class="hot_time">客服热线(9:00-6:00)</p>
+                        <p class="hot_num">400-618-9090</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+    <!-- 头部 end -->
+     <!-- 首页导航 -->
+    <div class="navitem">
+        <ul class="nav">
+        </ul>
+    </div>
+    
